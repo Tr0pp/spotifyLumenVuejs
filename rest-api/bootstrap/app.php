@@ -23,10 +23,11 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
+$app->configure('session');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -60,7 +61,15 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->bind(\Illuminate\Session\SessionManager::class, function ($app){
+    return $app->make('session');
+});
 
+$app->middleware([
+    Illuminate\Session\Middleware\StartSession::class
+]);
+
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

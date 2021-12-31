@@ -14,6 +14,7 @@ use Laravel\Lumen\Auth\Authorizable;
  * @method findOrFail($id)
  * @method create(array $all)
  * @method paginate(int $int)
+ * @method where(string $string, mixed $get)
  */
 class User extends Model implements AuthenticatableContract, AuthorizableContract
 {
