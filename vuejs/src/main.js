@@ -3,6 +3,7 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import App from './App.vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import './assets/scss/app.scss'
 //Configuração de requisições
 import axios from "axios"
 //Configuração de rotas
