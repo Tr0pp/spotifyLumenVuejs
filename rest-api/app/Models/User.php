@@ -21,8 +21,12 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory;
 
+    //Access Level
     const USUARIO = 0;
     const ADMIN = 1;
+
+    //Error code
+    const EMAIL_EXISTENTE = 23505;
 
     protected $fillable = [
         'name', 'email',

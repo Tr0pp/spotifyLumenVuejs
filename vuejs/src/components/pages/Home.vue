@@ -1,0 +1,48 @@
+<template>
+  <div>
+    <ul>
+      <li>{{ usersList }}</li>
+    </ul>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Home',
+  data(){
+    return {
+      usersList: []
+    }
+  },
+  created() {
+    this.listUsers()
+  },
+  methods: {
+    listUsers(){
+      this.$axios.defaults.headers.common['Authorization'] = `${sessionStorage.getItem('token_type')} ${sessionStorage.getItem('token')}`
+      this.$axios.get('/users')
+      .then((res) =>{
+        this.usersList = res.data
+      })
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>

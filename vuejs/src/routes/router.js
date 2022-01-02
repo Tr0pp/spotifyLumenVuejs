@@ -1,10 +1,10 @@
-import Auth from "../components/pages/Auth";
+import Home from "../components/pages/Home";
 
 let routes = [
     {
-        name: 'auth',
+        name: 'home',
         path: '/',
-        component: Auth
+        component: Home
     },
     // {
     //     path: '/',

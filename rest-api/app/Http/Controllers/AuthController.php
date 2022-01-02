@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    private $user;
+    private $_user;
 
     public function __construct(User $user)
     {
-        $this->user = $user;
+        $this->_user = $user;
     }
 
     public function register(Request $request) : JsonResponse
@@ -32,20 +32,17 @@ class AuthController extends Controller
             $user->email = $request->input('email');
             $user->password = Hash::make($request->input('password'));
 
-            $message = 'Erro ao registrar';
-
             if ($user->save()) {
-                $message = 'Registrado com sucesso !';
+                return response()->json(['error' => 0, 'message' => 'Registrado com sucesso !']);
             }
         } catch (\Exception $e) {
-            $message = $e->getMessage();
+            $message = $e->getCode();
+            if($e->getCode() == $this->_user::EMAIL_EXISTENTE){
+                return response()->json(['error' => 1, 'message' => 'Email de usuário já existente.']);
+            }
         }
 
-        return response()->json([
-            'data' => [
-                'message' => $message
-            ]
-        ]);
+
     }
 
     public function login(Request $request)
@@ -57,7 +54,7 @@ class AuthController extends Controller
         ]);
 
         if($credentials = $request->only(['email', 'password'])) {
-            $user_data = $this->user
+            $user_data = $this->_user
                 ->where('email', $request->get('email'))
                 ->first();
         }
@@ -82,7 +79,7 @@ class AuthController extends Controller
         ]);
 
         try {
-            $data = $this->user
+            $data = $this->_user
                 ->where('email', $request->get('email'))
                 ->first();
 

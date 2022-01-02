@@ -9,21 +9,21 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    private $user;
+    private $_user;
 
     public function __construct(User $user)
     {
-        $this->user = $user;
+        $this->_user = $user;
         $this->middleware('auth');
     }
 
     public function index()
     {
-        return $this->user->paginate(10);
+        return $this->_user->paginate(10);
     }
 
     public function show($id)
     {
-        return $this->user->find($id);
+        return $this->_user->find($id);
     }
 }
