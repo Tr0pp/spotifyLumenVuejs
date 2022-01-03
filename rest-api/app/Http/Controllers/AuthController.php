@@ -50,32 +50,6 @@ class AuthController extends Controller
         ]);
     }
 
-    public function login1(Request $request)
-    {
-        //validate incoming request
-        $this->validate($request, [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
-
-        if($credentials = $request->only(['email', 'password'])) {
-            $user_data = $this->_user
-                ->where('email', $request->get('email'))
-                ->first();
-        }
-
-        if (!$token = Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token, [
-            'id_user' => $user_data->id,
-            'email_user' => $user_data->email,
-            'name_user' => $user_data->name,
-            'access_level_user' => $user_data->access_level
-        ]);
-    }
-
     public function login(Request $request) : JsonResponse
     {
         if($request->session()->get('user_logged')){
