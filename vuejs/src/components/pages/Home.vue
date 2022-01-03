@@ -1,8 +1,7 @@
 <template>
   <div>
-    <ul>
-      <li>{{ usersList }}</li>
-    </ul>
+    <h1 class="text-white pt-5">Música para todos.</h1>
+    <h5 class="text-white">Milhões de músicas à sua escolha.</h5>
   </div>
 </template>
 
@@ -11,7 +10,7 @@ export default {
   name: 'Home',
   data(){
     return {
-      usersList: []
+      userLogged: []
     }
   },
   created() {
@@ -19,11 +18,13 @@ export default {
   },
   methods: {
     listUsers(){
-      this.$axios.defaults.headers.common['Authorization'] = `${sessionStorage.getItem('token_type')} ${sessionStorage.getItem('token')}`
-      this.$axios.get('/users')
-      .then((res) =>{
-        this.usersList = res.data
-      })
+      if(sessionStorage.getItem('is_logged') || sessionStorage.getItem('is_logged') !== undefined){
+        this.$axios.defaults.headers.common['Authorization'] = `${sessionStorage.getItem('token_type')} ${sessionStorage.getItem('token')}`
+        this.$axios.get(`/users/${sessionStorage.getItem('user_id')}`)
+        .then((res) =>{
+          this.userLogged = res.data
+        })
+      }
     }
   }
 }

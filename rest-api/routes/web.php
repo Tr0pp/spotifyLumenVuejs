@@ -17,12 +17,15 @@ $router->get('/', function () use ($router) {
     return "Spotify Lumen + VueJs -- {$router->app->version()}";
 });
 
+
 $router->group(['prefix' => 'auth'], function () use ($router){
     $router->post('/', 'AuthController@login');
     $router->post('/register', 'AuthController@register');
+    $router->post('/logout', 'AuthController@logout');
 });
 
 $router->group(['prefix' => 'users'], function () use ($router){
     $router->get('/', 'UserController@index');
     $router->get('/{id}', 'UserController@show');
 });
+

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <b-alert v-model="errorRegister" variant="danger" dismissible>
+    <b-alert class="col-md-9 ml-5" v-model="errorRegister" variant="danger" dismissible>
       {{ errMsg }}
     </b-alert>
-    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+    <b-form class="col-md-9 ml-5" @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
           id="input-group-1"
           label-for="input-1"

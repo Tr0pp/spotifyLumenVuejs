@@ -33,19 +33,24 @@ class AuthController extends Controller
             $user->password = Hash::make($request->input('password'));
 
             if ($user->save()) {
-                return response()->json(['error' => 0, 'message' => 'Registrado com sucesso !']);
+                $error = 0;
+                $message = 'Registrado com sucesso !';
             }
         } catch (\Exception $e) {
             $message = $e->getCode();
             if($e->getCode() == $this->_user::EMAIL_EXISTENTE){
-                return response()->json(['error' => 1, 'message' => 'Email de usuário já existente.']);
+                $error = 1;
+                $message = 'Email de usuário já existente.';
             }
         }
 
-
+        return response()->json([
+            'error' => $error,
+            'message' => $message
+        ]);
     }
 
-    public function login(Request $request)
+    public function login1(Request $request)
     {
         //validate incoming request
         $this->validate($request, [
@@ -64,15 +69,25 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token, [
+            'id_user' => $user_data->id,
             'email_user' => $user_data->email,
             'name_user' => $user_data->name,
             'access_level_user' => $user_data->access_level
         ]);
     }
 
-    /**
-    public function authentication(Request $request) : JsonResponse
+    public function login(Request $request) : JsonResponse
     {
+        if($request->session()->get('user_logged')){
+            if($request->session()->get('user_logged')['user_email'] == $request->input('email')) {
+                $token = Auth::attempt($request->input('email'));
+
+                return $this->respondWithToken($token, [
+                    $request->session()->get('user_logged'),
+                ]);
+            }
+        }
+
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
@@ -85,24 +100,33 @@ class AuthController extends Controller
 
             $message = "Usuário ou senha incorretos.";
 
-            if ($data && Hash::check($request->get('password'), $data->password)) {
+            if ($token = Auth::attempt($request->only(['email', 'password']))) {
                 $request->session()->put('user_logged', [
                     'user_id' => $data->id,
                     'user_name' => $data->name,
                     'user_email' => $data->email,
+                    'access_level_user' => $data->access_level,
+                    'is_logged' => true
                 ]);
 
+                return $this->respondWithToken($token, [
+                    $request->session()->get('user_logged'),
+                ]);
 
-                $message = "Logado com sucesso !";
             }
         } catch (\Exception $e) {
             $message = $e->getMessage();
         }
 
         return response()->json([
-            'data' => [
-                'message' => $message
-            ]
+            'message' => $message
         ]);
-    }*/
+    }
+
+    function logout(Request $request){
+        $request->session()->pull('user_logged');
+        $request->session()->flush();
+        return response()->json(['message' => 'Deslogado com sucesso.']);
+
+    }
 }
